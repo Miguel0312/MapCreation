@@ -1,0 +1,60 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+#content{
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #ddd;
+}
+
+form{
+    display: flex;
+}
+
+input{
+    height: 80px;
+    margin: 10px;
+    font-size: 32px;
+    border-radius: 8px;
+    box-shadow: none;
+}
+
+#idField{
+    width: 180px;
+    font-size: 60px;
+    box-sizing: border-box;
+}
+
+#submitButton{
+    box-sizing: border-box;
+    padding: 12px;
+}
+
+#submitButton:hover{
+    cursor: pointer;
+    background-color: #ddd;
+}
+
+#backButton{
+    height: 50px;
+    width: 50px;
+    font-size: 52px;
+    text-decoration: none;
+    color: black;
+    position: relative;
+    bottom: 40vh;
+}
+
+#backButton:hover{
+    cursor: pointer;
+}
+
+#map{
+    height: 80vh;
+    width: 80vw;
+}

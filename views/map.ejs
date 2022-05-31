@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Velo</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="content"></div>
+</body>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAhf3JleYpal9S-xouJYH8lf7Dvz5Y2Nko"></script>
+<script>
+    content = document.querySelector("#content");
+
+    const createMapScreen = async () => {
+        content.innerHTML = "";
+
+        const backButton = document.createElement("a");
+        backButton.id = "backButton";
+        backButton.textContent = "\u21e6";
+        backButton.href = "http://localhost:5000/";
+        content.appendChild(backButton);
+
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        const id = urlParams.get("id");
+        console.log(id);
+
+        const mapDiv = document.createElement("div");
+        mapDiv.id = "map";
+        content.appendChild(mapDiv);
+
+        const response = await fetch("http://localhost:5000/api/map?id="+id);
+        const points = await response.json();
+        console.log(points);
+
+        let coordinates = []
+        
+        coordinates = []
+        for(p of points){
+            temp = {"lng": p.coordY, "lat": p.coordX}
+            coordinates.push(temp);
+        }
+
+        const path = new google.maps.Polygon({
+            paths: coordinates,
+            strokeColor: "#FF0000",
+            strokeOpacity: 0.8,
+            strokeWeight:2,
+            fillOpacity:0
+        })
+
+        let map;
+
+        function initMap() {
+            map = new google.maps.Map(document.getElementById("map"), {
+            center: coordinates[0],
+            zoom: 16,
+            });
+        }
+
+        initMap()
+
+        path.setMap(map);
+
+    }
+
+    createMapScreen();
+</script>
+</html>
