@@ -38,9 +38,20 @@
 
         let coordinates = []
         
-        coordinates = []
-        for(p of points){
-            temp = {"lng": p.coordY, "lat": p.coordX}
+        let dist = 0;
+        for (var i = 0; i < points.length-2; i++) {
+            dist += calcDist(points[i].coordX, points[i].coordY, points[i+1].coordX, points[i+1].coordY);
+        }
+        let pression = 4 * (dist/points[points.length-1].coordY);
+
+        let pressionDiv = document.createElement("div");
+        pressionDiv.id = "pression"
+        pressionDiv.textContent = "Pression: " + pression.toString() + " bar";
+        content.appendChild(pressionDiv)
+
+
+        for(var i = 0; i < points.length-1; i++){
+            temp = {"lng": points[i].coordX, "lat": points[i].coordY}
             coordinates.push(temp);
         }
 
@@ -59,6 +70,24 @@
             center: coordinates[0],
             zoom: 16,
             });
+        }
+
+        function calcDist(lat1, lon1, lat2, lon2) {
+            var R = 6371; // km
+            var dLat = toRad(lat2-lat1);
+            var dLon = toRad(lon2-lon1);
+            var lat1 = toRad(lat1);
+            var lat2 = toRad(lat2);
+
+            var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
+            var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+            var d = R * c;
+            return d;
+        }
+
+        function toRad(Value) {
+            return Value * Math.PI / 180;
         }
 
         initMap()

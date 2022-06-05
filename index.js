@@ -1,25 +1,26 @@
 const content = document.querySelector("#content");
 
-const searchRouteScreen = ()=>{
-    content.innerHTML = "";
+const searchRouteScreen = () => {
+	content.innerHTML = "";
 
-    const form = document.createElement("form");
-    form.autocomplete = "false";
-    form.action = "/map";
-    
-    const idField = document.createElement("input");
-    idField.autocomplete = "false";
-    idField.id = "idField"
-    idField.name = "id";
+	const form = document.createElement("form");
+	form.autocomplete = "false";
+	form.action = "/map";
 
-    const submitButton = document.createElement("input");
-    submitButton.type = "submit";
-    submitButton.id = "submitButton"
+	const idField = document.createElement("input");
+	idField.autocomplete = "false";
+	idField.id = "idField";
+	idField.name = "id";
 
-    form.appendChild(idField);
-    form.appendChild(submitButton);
+	const submitButton = document.createElement("input");
+	submitButton.type = "submit";
+	submitButton.id = "submitButton";
+	submitButton.value = "Envoyer";
 
-    content.appendChild(form);
-}
+	form.appendChild(idField);
+	form.appendChild(submitButton);
 
-searchRouteScreen()
+	content.appendChild(form);
+};
+
+searchRouteScreen();

@@ -9,6 +9,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
     background-color: #ddd;
 }
 
@@ -22,6 +23,7 @@ input{
     font-size: 32px;
     border-radius: 8px;
     box-shadow: none;
+    border: none;
 }
 
 #idField{
@@ -47,7 +49,8 @@ input{
     text-decoration: none;
     color: black;
     position: relative;
-    bottom: 40vh;
+    right: 43vw;
+    top: 3vh;
 }
 
 #backButton:hover{
@@ -57,4 +60,10 @@ input{
 #map{
     height: 80vh;
     width: 80vw;
+    background-color: blue;
+}
+
+#pression{
+    margin-top: 20px;
+    font-size: 32px;
 }
