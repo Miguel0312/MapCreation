@@ -6,10 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Velo</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.css">
 </head>
 <body>
     <div id="content"></div>
 </body>
+<script src="https://cdn.jsdelivr.net/chartist.js/latest/chartist.min.js"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAhf3JleYpal9S-xouJYH8lf7Dvz5Y2Nko"></script>
 <script>
     content = document.querySelector("#content");
@@ -26,33 +28,48 @@
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
         const id = urlParams.get("id");
-        console.log(id);
-
         const mapDiv = document.createElement("div");
         mapDiv.id = "map";
         content.appendChild(mapDiv);
 
         const response = await fetch("http://localhost:5000/api/map?id="+id);
         const points = await response.json();
-        console.log(points);
 
         let coordinates = []
+        let accidents = []
+        let vitesses = []
         
         let dist = 0;
         for (var i = 0; i < points.length-2; i++) {
             dist += calcDist(points[i].coordX, points[i].coordY, points[i+1].coordX, points[i+1].coordY);
         }
-        let pression = 4 * (dist/points[points.length-1].coordY);
+        let pression = (dist/points[points.length-1].coordY>31/30);
+        messagePression = pression ? "Gonflé" : "Degonflé"
 
         let pressionDiv = document.createElement("div");
         pressionDiv.id = "pression"
-        pressionDiv.textContent = "Pression: " + pression.toString() + " bar";
+        pressionDiv.innerHTML = "Pneu: " + messagePression + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Distance Parcourue: " + (1000*dist.toFixed(2)) + "m";
         content.appendChild(pressionDiv)
 
+        let titreGraphique = document.createElement("h2")
+        titreGraphique.id = "titreGraphique"
+        titreGraphique.textContent = "Evolution de la vitesse (km/h) en fonction du temps (s)"
+        content.appendChild(titreGraphique)
 
-        for(var i = 0; i < points.length-1; i++){
+        let graphique = document.createElement("div")
+        graphique.id = "graphique"
+        content.appendChild(graphique)
+
+
+        for(let i = 0; i < points.length-1; i++){
             temp = {"lng": points[i].coordX, "lat": points[i].coordY}
             coordinates.push(temp);
+
+            if(points[i].accident){
+                accidents.push(temp)
+            }
+
+            vitesses.push(points[i].vitesse_kmh.toFixed(2))
         }
 
         const path = new google.maps.Polygon({
@@ -68,7 +85,7 @@
         function initMap() {
             map = new google.maps.Map(document.getElementById("map"), {
             center: coordinates[0],
-            zoom: 16,
+            zoom: 19,
             });
         }
 
@@ -93,6 +110,29 @@
         initMap()
 
         path.setMap(map);
+        for(a of accidents)
+            new google.maps.Marker({position: a, map})
+
+        labels = []
+        for(let i = 0; i<vitesses.length; i++){
+            labels.push((5*i).toString())
+        }
+
+        var options = {
+            fullWidth: false,
+            // Don't draw the line chart points
+            showPoint: false,
+            // X-Axis specific configuration
+            axisX: {
+            // We can disable the grid for this axis
+            showGrid: true,
+            // and also don't show the label
+            },
+        };
+
+        new Chartist.Line('#graphique', {
+            series: [vitesses], labels
+        }, options);
 
     }
 

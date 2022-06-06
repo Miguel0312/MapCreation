@@ -43,7 +43,7 @@ app.get('/api/map', function (req, res) {
         if (err) throw err;
       });
 
-    connection.query("SELECT coordX, coordY FROM Mesure WHERE idTrajet="+id+" UNION SELECT 1,distance_km FROM Trajet WHERE idTrajet="+id,(err,rows)=>{
+    connection.query("SELECT coordX, coordY,accident, vitesse_kmh FROM Mesure WHERE idTrajet="+id+" UNION SELECT 1,distance_km, 1, 1 FROM Trajet WHERE idTrajet="+id,(err,rows)=>{
         if(err) throw err;
         res.json(rows);
     })
